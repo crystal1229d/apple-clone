@@ -56,3 +56,90 @@ a {
     font-size: 4rem;    /* html이 14px로 설정되어있으므로 14x4=56px */
     text-align: center;
 }
+.main-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+    height: 3em;    /* 현재 이 클래스를 가진 div의 font-size의 3배 높이 */
+    font-size: 2.5rem;
+}
+.main-message p {
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.2;
+}
+.main-message small {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.2rem;
+}
+#scroll-section-2 .main-message {
+    font-size: 3.5rem;
+}
+.description {
+    padding: 0 1rem;
+    font-size: 1.rem;
+    color: #888;    /* 회색 */
+}
+.description strong {
+    float: left;
+    margin-right: 0.2em;
+    font-size: 3rem;
+    color: rgb(29, 29, 31); /* 검정 */
+}
+.desc-message {
+    width: 50%;
+    font-weight: bold;
+}
+.pin {
+    width: 1px;
+    height: 100px;
+    background: rgb(29, 29, 31);
+}
+.mid-message {
+    padding: 0 1rem;
+    font-size: 2rem;
+    color: #888;
+}
+.mid-message strong {
+    color: rgb(29, 29, 31);
+}
+.canvas-caption {
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #888;
+}
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7rem;
+    color: white;
+    background: darkorange;
+}
+
+@media (min-width: 1024px) {
+    #scroll-section-0 h1 {
+        font-size : 9vw; /* (em, rem)고정값이 아니라 브라우저 크기(윈도우창)에 따라 변화하는 사이즈(vw) */
+    }
+    .main-message {
+        font-size: 4vw;
+    }
+    .description {
+        font-size: 2rem;
+    }
+    .description strong {
+        font-size: 6rem;
+    }
+    #scroll-section-2 .main-message {
+        font-size: 6vw;
+    
+    }
+    .main-message small {
+        font-size: 1.5vw;
+    }
+    .desc-message {
+        width: 20%;
+    }
+}
