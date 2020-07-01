@@ -78,6 +78,8 @@ a {
     font-size: 3.5rem;
 }
 .description {
+    max-width: 1000px;
+    margin: 0 auto; /* 가운데 정렬 */
     padding: 0 1rem;
     font-size: 1.rem;
     color: #888;    /* 회색 */
