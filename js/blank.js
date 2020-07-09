@@ -72,19 +72,38 @@
 
     }
 
+    function calcValues(values, currentYOffset) {
+        let rv;
+        // 현재 씬(스크롤 섹션)에서 스크롤된 범위를 비율로 계산
+        let scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight; 
+
+        rv = scrollRatio * (values[1] - values[0]) + values[0];
+
+        return rv;
+    }
+
     function playAnimation() {
+        const objs = sceneInfo[currentScene].objs;
+        const values = sceneInfo[currentScene].values;
+
+        // (현재 씬에서 스크롤한 길이) =  (전체스크롤길이) - (이전 씬의길이의합)
+        // 전체스크롤과 달리, 씬이 바뀔때마다 0으로 초기화됨 
+        const currentYOffset = yOffset - prevScrollHeight; 
+
         switch (currentScene) {
             case 0:
-                console.log('0 play');
+                //console.log('0 play');
+                let messageA_opcaity_in = calcValues(values.messageA_opacity, currentYOffset);
+                objs.messageA.style.opacity = messageA_opcaity_in;
                 break;
             case 1:
-                console.log('1 play');
+                // console.log('1 play');
                 break;
             case 2:
-                console.log('2 play');
+                // console.log('2 play');
                 break;
             case 3:
-                console.log('3 play');
+                // console.log('3 play');
                 break;
         }
     }
@@ -120,6 +139,5 @@
     //window.addEventListener('DOMContentLoaded', setLayout);
     window.addEventListener('resize', setLayout); // 윈도우창의 사이즈가 변할때 setLayout() 실행
     
-
 
 } )();
