@@ -20,8 +20,9 @@
                 messageD : document.querySelector('#scroll-section-0 .main-message.d')
             },
             values: {
-                messageA_opacity: [0, 1, { start: 0.1, end: 0.2 }],
-                messageB_opacity: [0, 1, { start: 0.3, end: 0.4 }],
+                messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
+                messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+                messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
             }
         },
         {
@@ -75,63 +76,68 @@
     }
 
     function calcValues(values, currentYOffset) {
+
         let rv;
-        // 현재 씬(스크롤 섹션)에서 스크롤된 범위를 비율로 계산
-        const scrollHeight = sceneInfo[currentScene].scrollHeight;
-        const scrollRatio = currentYOffset / scrollHeight; 
+		// 현재 씬(스크롤섹션)에서 스크롤된 범위를 비율로 구하기
+		const scrollHeight = sceneInfo[currentScene].scrollHeight;
+		const scrollRatio = currentYOffset / scrollHeight;
 
-        if (values.length === 3) {
-            // start ~ end 사이에 애니메이션 실행
-            const partScrollStart = values[2].start * scrollHeight;
-            const partScrollEnd = values[2].end * scrollHeight;
-            const partScrollHeight = partScrollEnd - partScrollStart;
+		if (values.length === 3) {
+			// start ~ end 사이에 애니메이션 실행
+			const partScrollStart = values[2].start * scrollHeight;
+			const partScrollEnd = values[2].end * scrollHeight;
+			const partScrollHeight = partScrollEnd - partScrollStart;
 
-            if (currentYOffset <= partScrollStart && currentYOffset >= partScrollEnd) {
-                rv = (currentYOffset - partScrollStart) / partScrollHeight * (values[1] - values[0]) + values[0];
-            } else if (currentYOffset < partScrollStart) {
-                rv = values[0];
-            } else if (currentYOffset > partScrollEnd) {
-                rv = values[1];
-            }
-        } else {
-            rv = scrollRatio * (values[1] - values[0]) + values[0];
-        }
-        
-        return rv;
+			if (currentYOffset >= partScrollStart && currentYOffset <= partScrollEnd) {
+				rv = (currentYOffset - partScrollStart) / partScrollHeight * (values[1] - values[0]) + values[0];
+			} else if (currentYOffset < partScrollStart) {
+				rv = values[0];
+			} else if (currentYOffset > partScrollEnd) {
+				rv = values[1];
+			}
+		} else {
+			rv = scrollRatio * (values[1] - values[0]) + values[0];
+		}
+
+		return rv;
     }
 
     function playAnimation() {
         const objs = sceneInfo[currentScene].objs;
-        const values = sceneInfo[currentScene].values;
-
+		const values = sceneInfo[currentScene].values;
         // (현재 씬에서 스크롤한 길이) =  (전체스크롤길이) - (이전 씬의길이의합)
         // 전체스크롤과 달리, 씬이 바뀔때마다 0으로 초기화됨 
-        const currentYOffset = yOffset - prevScrollHeight; 
+        const currentYOffset = yOffset - prevScrollHeight;
+        const scrollHeight = sceneInfo[currentScene].scrollHeight;
+        const scrollRatio = currentYOffset / scrollHeight; // 현재 씬의 scrollHeight
 
-        console.log(currentScene);
+        // console.log(currentScene);
 
         switch (currentScene) {
             case 0:
-                //console.log('0 play');
-                let messageA_opcaity_in = calcValues(values.messageA_opacity, currentYOffset);
-                objs.messageA.style.opacity = messageA_opcaity_in;
-                console.log(messageA_opcaity_in);
+                const messageA_opcaity_in = calcValues(values.messageA_opacity_in, currentYOffset);
+                const messageA_opacity_out = calcValues(values.messageA_opacity_out, currentYOffset);
+
+                if (scrollRatio <= 0.22){      
+                    objs.messageA.style.opacity = messageA_opcaity_in;
+                } else {
+                    objs.messageA.style.opacity = messageA_opacity_out;
+                }
                 break;
             case 1:
-                // console.log('1 play');
                 break;
             case 2:
-                // console.log('2 play');
                 break;
             case 3:
-                // console.log('3 play');
                 break;
         }
     }
 
     function scrollLoop() {
+
         enterNewScene = false;
         prevScrollHeight = 0;   // 값이 누적되지 않게끔 스크롤할때마다 0으로 초기화
+        
         // 현재 보이는 화면에서 몇 번째 스크롤섹션이 스크롤되고있는지 판별
         for (let i = 0; i < currentScene; i++) {
             prevScrollHeight += sceneInfo[i].scrollHeight;
