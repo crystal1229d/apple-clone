@@ -21,8 +21,11 @@
             },
             values: {
                 messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
-                messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+                //messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
                 messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
+
+                messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+                messageA_translateY_out: [0, 20, { start: 0.25, end: 0.3 }],
             }
         },
         {
@@ -57,8 +60,13 @@
     function setLayout() {
         // 각 스크롤 섹션의 높이 세팅
         for (let i = 0; i < sceneInfo.length; i++) {
-            sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;    //윈도의 전역객체는 앞의 window. 생략가능
+            if (sceneInfo[i].type === 'sticky') {
+                sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;    //윈도의 전역객체는 앞의 window. 생략가능
+            } else if(sceneInfo[i].type === 'normal' ) {
+                sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight;
+            }
             sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
+            
         }
 
         // 새로고침한 경우 알맞은 currentScene 을 부여하므로써 body에 올바른 show-scene-n id를 설정
@@ -115,13 +123,12 @@
 
         switch (currentScene) {
             case 0:
-                const messageA_opcaity_in = calcValues(values.messageA_opacity_in, currentYOffset);
-                const messageA_opacity_out = calcValues(values.messageA_opacity_out, currentYOffset);
-
                 if (scrollRatio <= 0.22){      
-                    objs.messageA.style.opacity = messageA_opcaity_in;
+                    objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
+                    objs.messageA.style.transform = `translateY(${calcValues(values.messageA_translateY_in, currentYOffset)}%)`;
                 } else {
-                    objs.messageA.style.opacity = messageA_opacity_out;
+                    objs.messageA.style.opacity = calcValues(values.messageA_opacity_out, currentYOffset);
+                    objs.messageA.style.transform = `translateY(${calcValues(values.messageA_translateY_out, currentYOffset)}%)`;
                 }
                 break;
             case 1:
